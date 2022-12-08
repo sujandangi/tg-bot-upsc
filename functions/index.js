@@ -1,54 +1,43 @@
+const mySecret = process.env["OPENAI_API_KEY"];
+const axios = require("axios");
 const functions = require("firebase-functions");
-const {Telegraf} = require("telegraf");
-const { Configuration, OpenAIApi } = require("openai"); // OPENAI
+
+// using environment variables
 let config = require("./env.json");
+// if present in function.config()? use them instead
+if (Object.keys(functions.config()).length) {
+  config = functions.config();
+}
 
-const Telegraf = require('telegraf')
-const fetch = require('node-fetch')
+// ------------------------handling OpenAI API----------------------------
+const client = axios.create({
+  headers: {
+    Authorization: "Bearer " + config.service.openai_key,
+  },
+});
 
-// Create a new Telegram bot
-const bot = new Telegraf(config.service.telegram_key)
+const params = {
+  prompt: "tell me a motivating quote.",
+  max_tokens: 100,
+};
 
-// Set up a command that predicts completions for the user's message
-bot.command('completions', (ctx) => {
-  // Get the user's message
-  const message = ctx.message.text
+let data = "please wait";
 
-  // Send a request to the ChatGPT API to predict completions for the message
-  fetch('https://api.openai.com/v1/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${config.service.openai_key}`
-    },
-    body: JSON.stringify({
-      prompt: message,
-      max_tokens: 100,
-      temperature: 0.5,
-      top_p: 1,
-      frequency_penalty: 0,
-      presence_penalty: 0
-    })
+client
+  .post(
+    "https://api.openai.com/v1/engines/text-davinci-003/completions",
+    params
+  )
+  .then((result) => {
+    console.log(result.data);
+    data = result.data.choices[0].text;
   })
-    .then(response => response.json())
-    .then(data => {
-      // Get the predicted completions from the response
-      const completions = data.choices[0].text
-
-      // Reply to the user with the predicted completions
-      ctx.reply(completions)
-    })
-    .catch(err => {
-      // Log any errors that occurred
-      console.error(err)
-    })
-})
-
-// Start the bot
-bot.startPolling()
-
+  .catch((err) => {
+    console.log(err);
+    data = err;
+  });
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
-  functions.logger.info("Hello logs!", {structuredData: true});
-  response.send("Hello from Firebase Modified!");
+  // functions.logger.info("Hello logs!", { structuredData: true });
+  response.send(`Sent from openai >> ${data}`); //
 });
