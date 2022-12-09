@@ -29,11 +29,12 @@ bot.start((ctx) =>
   ctx.reply("Welcome! Type a question to get answer. Be descriptive.")
 );
 bot.on("text", async (ctx) => {
-  let query = ctx.update.message.text;
+  let query = ctx.update.message.text + ".";
   try {
     const params = {
       prompt: query,
       max_tokens: 250,
+      temperature: 0.4,
     };
 
     const response = await client.post(
