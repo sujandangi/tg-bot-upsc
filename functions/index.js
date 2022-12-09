@@ -21,13 +21,14 @@ const client = axios.create({
 
 // ------------------------Telegram Bot-------------------------------------------------
 const {Telegraf} = require("telegraf");
+const { message, editedMessage, channelPost, editedChannelPost, callbackQuery } = require("telegraf/filters");
 
 const bot = new Telegraf(config.service.telegram_key);
 
 bot.start((ctx) =>
   ctx.reply("Welcome! Type anything and you will receive a motivating quote!")
 );
-bot.on("text", async (ctx) => {
+bot.on(message("text"), async (ctx) => {
   try {
     const params = {
       prompt: "tell me a motivating quote.",
@@ -44,27 +45,12 @@ bot.on("text", async (ctx) => {
   } catch (error) {
     return ctx.reply("error");
   }
-  // client
-  // .post(
-  //   "https://api.openai.com/v1/engines/text-davinci-003/completions",
-  //   params
-  // )
-  // .then((result) => {
-  //   console.log(result.data);
-  //   data = result.data.choices[0].text;
-  //   await ctx.reply(`${data}`);
-  // })
-  // .catch((err) => {
-  //   console.log(err);
-  //   data = err;
-  //   await ctx.reply(`${data}`);
 });
 bot.launch();
 
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//   // functions.logger.info("Hello logs!", { structuredData: true });
-//   response.send(`Sent from openai >>`); //
-// });
+exports.helloWorld = functions.https.onRequest((request, response) => {
+  response.send(`Sent from openai >>`); //
+});
 
 // Enable graceful stop
 process.once("SIGINT", () => bot.stop("SIGINT"));
