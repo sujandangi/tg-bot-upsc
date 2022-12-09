@@ -1,17 +1,19 @@
 const axios = require("axios");
+const {firebaseConfig} = require("firebase-functions");
 const functions = require("firebase-functions");
 
 // using environment variables
-// let config = require("../env.json");
-// // if present in function.config()? use them instead
-// if (Object.keys(functions.config()).length) {
-//   config = functions.config();
-// }
+let config = require("../env.json");
+// if present in function.config()? use them instead
+if (Object.keys(functions.config()).length) {
+ config = functions.config();
+}
 
 // ------------------------handling OpenAI API-----------------
+// let config = functions.config();
 const client = axios.create({
   headers: {
-    Authorization: "Bearer " + "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",
+    Authorization: "Bearer " + config.service.openai_key,
   },
 });
 
@@ -27,8 +29,7 @@ bot.start((ctx) =>
   ctx.reply("Welcome! Type a question to get answer. Be descriptive.")
 );
 bot.on("text", async (ctx) => {
-  let query = "Try to answer the questions in about 150 words as a teacher. Include examples from India if possible."
-    ctx.update.message.text;
+  let query = ctx.update.message.text;
   try {
     const params = {
       prompt: query,
