@@ -14,7 +14,7 @@ const functions = require("firebase-functions");
 const client = axios.create({
   headers: {
     Authorization:
-      "Bearer " + "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",
+      "Bearer " + "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",
   },
 });
 
@@ -51,7 +51,7 @@ bot.on("text", async (ctx) => {
 });
 bot.launch();
 
-exports.gsQA = functions.https.onRequest((request, response) => {
+exports.gsQA_2 = functions.https.onRequest((request, response) => {
   response.send("Sent from openAI gsQA function >>"); //
 });
 
