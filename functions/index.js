@@ -2,16 +2,16 @@ const axios = require("axios");
 const functions = require("firebase-functions");
 
 // using environment variables
-let config = require("../env.json");
-// if present in function.config()? use them instead
-if (Object.keys(functions.config()).length) {
-  config = functions.config();
-}
+// let config = require("../env.json");
+// // if present in function.config()? use them instead
+// if (Object.keys(functions.config()).length) {
+//   config = functions.config();
+// }
 
 // ------------------------handling OpenAI API-----------------
 const client = axios.create({
   headers: {
-    Authorization: "Bearer " + config.service.openai_key,
+    Authorization: "Bearer " + "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",
   },
 });
 
@@ -21,21 +21,24 @@ const client = axios.create({
 const {Telegraf} = require("telegraf");
 const {message} = require("telegraf/filters");
 
-const bot = new Telegraf(config.service.telegram_key);
+const bot = new Telegraf("5820340146:AAHGDaxBlO3yLI0fFxeGUoF5qW2eELHbx5s");
 
 bot.start((ctx) =>
-  ctx.reply("Welcome! Type anything and you will receive a motivating quote!"),
+  ctx.reply("Welcome! Type a question to get answer. Be descriptive.")
 );
-bot.on(message("text"), async (ctx) => {
+bot.on("text", async (ctx) => {
+  let query =
+    "Answer the question in bullet points and paragraph." + 
+    ctx.update.message.text;
   try {
     const params = {
-      prompt: "tell me a motivating quote.",
-      max_tokens: 100,
+      prompt: query,
+      max_tokens: 250,
     };
 
     const response = await client.post(
-        "https://api.openai.com/v1/engines/text-davinci-003/completions",
-        params,
+      "https://api.openai.com/v1/engines/text-davinci-003/completions",
+      params
     );
     return ctx.reply(response.data.choices[0].text);
   } catch (error) {
@@ -44,8 +47,8 @@ bot.on(message("text"), async (ctx) => {
 });
 bot.launch();
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
-  response.send("Sent from openai >>"); //
+exports.gsQA = functions.https.onRequest((request, response) => {
+  response.send("Sent from openAI gsQA function >>"); //
 });
 
 // Enable graceful stop
