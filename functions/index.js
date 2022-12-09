@@ -2,16 +2,16 @@ const axios = require("axios");
 const functions = require("firebase-functions");
 
 // using environment variables
-// let config = require("../env.json");
-// // if present in function.config()? use them instead
-// if (Object.keys(functions.config()).length) {
-//   config = functions.config();
-// }
+let config = require("../env.json");
+// if present in function.config()? use them instead
+if (Object.keys(functions.config()).length) {
+  config = functions.config();
+}
 
 // ------------------------handling OpenAI API-----------------
 const client = axios.create({
   headers: {
-    Authorization: "Bearer " + "",
+    Authorization: "Bearer " + config.service.openai_key,
   },
 });
 
@@ -21,7 +21,7 @@ const client = axios.create({
 const {Telegraf} = require("telegraf");
 const {message} = require("telegraf/filters");
 
-const bot = new Telegraf("");
+const bot = new Telegraf(config.service.telegram_key);
 
 bot.start((ctx) =>
   ctx.reply("Welcome! Type anything and you will receive a motivating quote!"),
@@ -48,6 +48,6 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
   response.send("Sent from openai >>"); //
 });
 
-// // Enable graceful stop
-// process.once("SIGINT", () => bot.stop("SIGINT"));
-// process.once("SIGTERM", () => bot.stop("SIGTERM"));
+// Enable graceful stop
+process.once("SIGINT", () => bot.stop("SIGINT"));
+process.once("SIGTERM", () => bot.stop("SIGTERM"));
