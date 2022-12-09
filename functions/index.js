@@ -3,7 +3,7 @@ const axios = require("axios");
 const functions = require("firebase-functions");
 
 // using environment variables
-let config = require("./env.json");
+// let config = require("./env.json");
 // if present in function.config()? use them instead
 if (Object.keys(functions.config()).length) {
   config = functions.config();
@@ -13,7 +13,7 @@ if (Object.keys(functions.config()).length) {
 const client = axios.create({
   headers: {
     Authorization:
-      "Bearer " + "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",
+      "Bearer " + config.service.openai_key,
   },
 });
 
