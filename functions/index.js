@@ -2,18 +2,19 @@ const axios = require("axios");
 const {firebaseConfig} = require("firebase-functions");
 const functions = require("firebase-functions");
 
-// using environment variables
-let config = require("../env.json");
-// if present in function.config()? use them instead
-if (Object.keys(functions.config()).length) {
- config = functions.config();
-}
+// // using environment variables
+// let config = require("../env.json");
+// // if present in function.config()? use them instead
+// if (Object.keys(functions.config()).length) {
+//   config = functions.config();
+// }
 
 // ------------------------handling OpenAI API-----------------
 // let config = functions.config();
 const client = axios.create({
   headers: {
-    Authorization: "Bearer " + config.service.openai_key,
+    Authorization:
+      "Bearer " + "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",
   },
 });
 
@@ -26,7 +27,9 @@ const {message} = require("telegraf/filters");
 const bot = new Telegraf("5820340146:AAHGDaxBlO3yLI0fFxeGUoF5qW2eELHbx5s");
 
 bot.start((ctx) =>
-  ctx.reply("Welcome! Type a question to get answer. Be descriptive.")
+  ctx.reply(
+    "Welcome! Type a question to get answer. Describe the question as exact as possible."
+  )
 );
 bot.on("text", async (ctx) => {
   let query = ctx.update.message.text + ".";
