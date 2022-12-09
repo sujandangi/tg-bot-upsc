@@ -27,7 +27,7 @@ bot.start((ctx) =>
   ctx.reply("Welcome! Type a question to get answer. Be descriptive.")
 );
 bot.on("text", async (ctx) => {
-  let query = "Try to answer the questions in about 150 words as a teacher. Include examples from India if possible"
+  let query = "Try to answer the questions in about 150 words as a teacher. Include examples from India if possible."
     ctx.update.message.text;
   try {
     const params = {
