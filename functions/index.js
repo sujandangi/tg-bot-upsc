@@ -3,7 +3,7 @@ const axios = require("axios");
 const functions = require("firebase-functions");
 
 // using environment variables
-// let config = require("./env.json");
+let config = require("../env.json");
 // if present in function.config()? use them instead
 if (Object.keys(functions.config()).length) {
   config = functions.config();
