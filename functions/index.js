@@ -14,7 +14,7 @@ const functions = require("firebase-functions");
 const client = axios.create({
   headers: {
     Authorization:
-      "Bearer " + "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",
+      "Bearer " + process.env.OPENAI_KEY,
   },
 });
 
@@ -24,7 +24,7 @@ const client = axios.create({
 const {Telegraf} = require("telegraf");
 const {message} = require("telegraf/filters");
 
-const bot = new Telegraf("5820340146:AAHGDaxBlO3yLI0fFxeGUoF5qW2eELHbx5s");
+const bot = new Telegraf(`${process.env.TELEGRAM_KEY}`);
 
 bot.start((ctx) =>
   ctx.reply(
@@ -51,7 +51,7 @@ bot.on("text", async (ctx) => {
 });
 bot.launch();
 
-exports.gsQA_2 = functions.https.onRequest((request, response) => {
+exports.gsQA_3 = functions.https.onRequest((request, response) => {
   response.send("Sent from openAI gsQA function >>"); //
 });
 
